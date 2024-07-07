@@ -1,0 +1,50 @@
+
+<template>
+    <div>
+        <el-button type="text" @click="dialogVisible = true">点击打开表单</el-button>
+        <el-dialog
+        title="请填写表单信息"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose">
+
+
+
+        <span><form-view></form-view></span>
+
+
+
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        </span>
+        </el-dialog>
+    </div>
+</template>
+
+<script>
+import FormView from './FormView.vue';
+/* eslint-disable */
+    export default {
+  components: { FormView },
+    data() {
+        return {
+        dialogVisible: false
+        };
+    },
+    methods: {
+        handleClose(done) {
+        this.$confirm('确认关闭？')
+
+            .then(_ => {
+            done();
+        })
+        .catch(_ => {});
+    }
+    }
+};
+</script>
+
+<style>
+
+</style>
