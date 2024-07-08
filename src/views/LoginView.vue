@@ -1,4 +1,6 @@
 <template>
+  <div style="width: 85vw; background-color: aquamarine;">
+    <header>登陆</header>
     <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
     
     <el-form-item label="管理员ID" prop="number">
@@ -14,6 +16,7 @@
       <el-button @click="resetForm('ruleForm')">重置</el-button>
     </el-form-item>
   </el-form>
+</div>
 </template>
 
 
