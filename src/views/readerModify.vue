@@ -7,24 +7,29 @@
             <br/>
             <br/>
             <el-form-item label="读者ID" prop="id">
-            <el-input v-model="form.name"></el-input>
+            <el-input v-model="form.id"></el-input>
             </el-form-item>
             <el-form-item label="读者邮箱" prop="email">
             <el-input v-model="form.email"></el-input>
             </el-form-item>
+            <el-form-item label="读者姓名" prop="name">
+            <el-input v-model="form.name"></el-input>
+            </el-form-item>
             </el-form>
-            <div>
+            <div style="align-items: center; margin-left: 30%">
+                <el-checkbox v-model="checked" >修改角色身份  </el-checkbox>
                 <el-dropdown @command="handleCommand">
                     <span class="el-dropdown-link">
-                        下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                        选择身份<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <!-- <el-dropdown-item v-for="item in menuItems": key = "item">{{item.name}}</el-dropdown-item> -->
                         <el-dropdown-item v-for="(item, index) in menuItems" :key="index" :command = item.name >{{ item.name }}</el-dropdown-item>
                         
                     </el-dropdown-menu>
+                    
                 </el-dropdown>
-                <div>选中的角色：{{ currentChar }}</div>
+                <div >选中的角色：{{ currentChar }}</div>
             </div>
     
     
@@ -40,10 +45,11 @@
     export default {
         data() {
             return {
-                currentChar:'',
+                checked: false,
+                currentChar:"未选择角色",
                 menuItems: [],
                 rules:{
-                id:[{//此处需要输入一个条形码
+                id:[{
                     required:true, message:"请输入ID", trigger: 'blur'
                 }],
                 email:[
@@ -57,6 +63,7 @@
                 form: {
                     name : null,
                     email: null,
+                    id : null,
                 },
             }
         },
@@ -92,29 +99,75 @@
                     alert("未分配角色！")
                     return;
                 }
-                axios({
+                if(this.checked){
+                    axios({
                         method:'post',
                         url: 'api/reader/update',
                         data:{
                             typeId:this.menuItems.find(item => item.name === this.currentChar).id,
                             name:this.form.name,
-                            email:this.form.email
+                            email:this.form.email,
+                            readerId: this.form.id,
+                            borrowingCount: null,
+                            expireDate:null,
                         },
                         headers:{
                         'token':sessionStorage.getItem("token")
                         }
                     }).then(
                     (resp)=>{
+                        this.form = {
+                        name : null,
+                        email: null,
+                        id : null,
+                        typeId: null,
+                    }
                         if(resp.data.code != 200){
                         alert(resp.data.msg)
                         } else {
-                        alert("成功增添读者")
+                        alert("成功修改读者")   
                         }
                     }
-                    ).catch(()=>{
-                    alert("网络错误，请联系网络管理员！")
+                    ).catch((resp)=>{
+                        console.log(resp.data)
+                        alert("网络错误，请联系网络管理员！")
                     })
-            }
+                }
+                else{
+                    axios({
+                        method:'post',
+                        url: 'api/reader/update',
+                        data:{
+                            typeId:null,
+                            name:this.form.name,
+                            email:this.form.email,
+                            readerId: this.form.id,
+                            borrowingCount: null,
+                            expireDate:null,
+                        },
+                        headers:{
+                        'token':sessionStorage.getItem("token")
+                        }
+                    }).then(
+                    (resp)=>{
+                        this.form = {
+                        name : null,
+                        email: null,
+                        id : null,
+                        typeId: null,
+                    }
+                        if(resp.data.code != 200){
+                        alert(resp.data.msg)
+                        } else {
+                        alert("成功修改读者")
+                        }
+                    }
+                    ).catch((resp)=>{
+                        console.log(resp.data)
+                        alert("网络错误，请联系网络管理员！")
+                    })
+                }
+            }   
         }
     }
         </script>
