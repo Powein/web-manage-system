@@ -52,20 +52,20 @@
     </template>
     
     <script>
+import axios from 'axios';
+
       export default {
         data() {
           return {
             form: {
-              name: '',
-              region: '',
-              date1: '',
-              date2: '',
-              delivery: false,
-              type: [],
-              resource: '',
-              desc: ''
+              readerId:'',
+              bookId:'',
+              fromDate:'',
+              toDate:''
             },
             value1: '',
+
+
         borrowData: [{
             date:'2022-2-22',
             reader:'雾雨魔理沙1',
@@ -103,6 +103,7 @@
           }
         },
         methods: {
+
           onSubmit() {
             console.log('submit!');
             console.log({
@@ -121,18 +122,35 @@
           //eslint-disable-next-line
           .catch(_ => {});
       },
-      handleClick(row) {
+
+
+      handleClick(row) {//点击即可归还图书
         const index = this.borrowData.findIndex(item => item.borrowId === row.borrowId);
         if (index !== -1) {
         console.log(this.borrowData[index])
         let result = confirm("确认还书？");
         if (result) {
         // 用户点击了确定按钮，执行相应的操作
+
         console.log("用户选择了确定");
             this.borrowData[index].isReturn = true;
+
+            axios({
+            method: 'post',
+            url: 'api/borrow/return',
+            data:{
+              id:row.id,
+
+            },
+            headers:{
+              'token':sessionStorage.getItem("token")
+            }
+          })
+
         } else {
         // 用户点击了取消按钮
-        console.log("用户选择了取消");
+          console.log("用户选择了取消");
+          
         }
     }
     }

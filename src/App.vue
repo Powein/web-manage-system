@@ -31,15 +31,15 @@
         <el-menu-item-group title="管理员管理">
           <template slot="title">管理员模块</template>
           <el-menu-item index="2-1"><router-link to="/admin/pass" class="jumplink">管理员密码管理</router-link></el-menu-item>
-          <el-menu-item index="2-2"><router-link to="admin/groups" class="jumplink">管理员组管理</router-link></el-menu-item>
+          <el-menu-item index="2-2"><router-link to="/admin/groups" class="jumplink">管理员组管理</router-link></el-menu-item>
         </el-menu-item-group>
 
         <el-menu-item-group title="读者管理">
           <template slot="title">读者管理模块</template>
-          <el-menu-item index="2-3"><router-link to="reader/register" class="jumplink">读者注册</router-link></el-menu-item>
+          <el-menu-item index="2-3"><router-link to="/reader/register" class="jumplink">读者注册</router-link></el-menu-item>
           <el-menu-item index="2-4"><router-link to="/reader/modify" class="jumplink">读者信息修改</router-link></el-menu-item>
-          <el-menu-item index="2-5"><router-link to="reader/query" class="jumplink">查询读者信息</router-link></el-menu-item>
-          <el-menu-item index="2-6"><router-link to="reader/groups" class="jumplink">读者组管理</router-link></el-menu-item>
+          <el-menu-item index="2-5"><router-link to="/reader/query" class="jumplink">查询读者信息</router-link></el-menu-item>
+          <el-menu-item index="2-6"><router-link to="/reader/groups" class="jumplink">读者组管理</router-link></el-menu-item>
         </el-menu-item-group>
 
 
