@@ -43,13 +43,13 @@ export default {
           },
 
           form: {
-              bookId:'',
-              bookName:'',
-              author:'',
-              barCode:'',
-              translator:'',
-              ISBN:'',
-              press:''
+              bookId:null,
+              bookName:null,
+              author:null,
+              barCode:null,
+              translator:null,
+              ISBN:null,
+              press:null
           },
         }
     },
@@ -81,6 +81,16 @@ export default {
               ).catch(()=>{
                 alert("图书信息非法")
               })
+
+            this.form = {
+              bookId:null,
+              bookName:null,
+              author:null,
+              barCode:null,
+              translator:null,
+              ISBN:null,
+              press:null
+          }
         }
     }
 }

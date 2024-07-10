@@ -60,13 +60,13 @@ export default {
             }],
       },
       form:{
-        bookName:'',
-        author:'',
-        barCode:'',
-        translator:'',
-        ISBN:'',
-        press:'',
-        bookId:''
+        bookName:null,
+        author:null,
+        barCode:null,
+        translator:null,
+        ISBN:null,
+        press:null,
+        bookId:null
       },
       isDelete:false
     }
@@ -97,6 +97,15 @@ export default {
               alert(response.data.msg)
             }
       })
+      this.form = {
+        bookName:null,
+        author:null,
+        barCode:null,
+        translator:null,
+        ISBN:null,
+        press:null,
+        bookId:null
+      }
     }
   }
 }

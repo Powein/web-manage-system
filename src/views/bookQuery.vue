@@ -168,6 +168,16 @@ export default {
               alert(response.data.msg)
             }
           })
+          this.form = 
+          {
+                bookId: null,
+                bookName: null,
+                author: null,
+                press: null,
+                barCode: null,
+                translator: null,
+            }
+          
         }
     }
 }

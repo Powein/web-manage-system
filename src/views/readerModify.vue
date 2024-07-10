@@ -1,90 +1,130 @@
 <template>
-<div style=" align-items: center; background-color: aquamarine; width:85vw;">
-<el-form ref="form" :model="form" :rules="rules" label-width="120px"
-    style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
-    <br/>
-    <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif;">读者修改</header>
-    <br/>
-    <br/>
-    <el-form-item label="读者名称" prop="name">
-    <el-input v-model="form.bookName"></el-input>
-    </el-form-item>
-    <el-form-item label="读者" prop="author">
-    <el-input v-model="form.author"></el-input>
-    </el-form-item>
-    <el-form-item label="条形码"  prop="barCode">
-    <el-input v-model="form.barCode"></el-input>
-    </el-form-item>
-    <el-form-item label="译者" prop="translator">
-    <el-input v-model="form.translator"></el-input>
-    </el-form-item>
-    <el-form-item label="ISBN码" prop="ISBN">
-    <el-input v-model="form.ISBN"></el-input>
-    </el-form-item>
-    <el-form-item label="出版社" prop="press">
-    <el-input v-model="form.press"></el-input>
-    </el-form-item>
-    </el-form>
-    <el-button type="primary" @click="addBook" style="width: 35vw; margin-left: 33%;">增添书籍</el-button>
-</div>
-</template>
-
-
-<script>
-import axios from 'axios';
-export default {
-data() {
-    return {
-        rules:{
-        barCode:[{//此处需要输入一个条形码
-            required:true, message:"请输入条形码", trigger: 'blur'
-        }],
-        },
-
-        form: {
-            bookId:'',
-            bookName:'',
-            author:'',
-            barCode:'',
-            translator:'',
-            ISBN:'',
-            press:''
-        },
-    }
-},
-methods: {
-    addBook() {
-        axios({
-                method:'post',
-                url: 'api/reader/insert',
-                data:{
-        id:null,
-        barCode:this.form.barCode,
-        bookName:this.form.bookName,
-        translator:this.form.translator,
-        press:this.form.press,
-        ISBN:this.form.ISBN,
-        author:this.form.author
-        },
-                headers:{
-                'token':sessionStorage.getItem("token")
-                }
-            }).then(
-            (resp)=>{
-                if(resp.data.code != 200){
-                alert(resp.data.msg)
-                } else {
-                alert("成功增添图书")
-                }
+    <div style=" align-items: center; background-color: aquamarine; width:85vw;">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px"
+            style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
+            <br/>
+            <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif;">读者信息修改</header>
+            <br/>
+            <br/>
+            <el-form-item label="读者ID" prop="id">
+            <el-input v-model="form.name"></el-input>
+            </el-form-item>
+            <el-form-item label="读者邮箱" prop="email">
+            <el-input v-model="form.email"></el-input>
+            </el-form-item>
+            </el-form>
+            <div>
+                <el-dropdown @command="handleCommand">
+                    <span class="el-dropdown-link">
+                        下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <!-- <el-dropdown-item v-for="item in menuItems": key = "item">{{item.name}}</el-dropdown-item> -->
+                        <el-dropdown-item v-for="(item, index) in menuItems" :key="index" :command = item.name >{{ item.name }}</el-dropdown-item>
+                        
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <div>选中的角色：{{ currentChar }}</div>
+            </div>
+    
+    
+            <el-button type="primary" @click="addReader" style="width: 35vw; margin-left: 33%;">注册读者</el-button>
+    
+    </div>
+    
+    </template>
+        
+        
+    <script>
+    import axios from 'axios';
+    export default {
+        data() {
+            return {
+                currentChar:'',
+                menuItems: [],
+                rules:{
+                id:[{//此处需要输入一个条形码
+                    required:true, message:"请输入ID", trigger: 'blur'
+                }],
+                email:[
+                    {
+                        type: 'email',
+                        message: '请输入合法的电子邮件地址',
+                        trigger: ['blur', 'change']
+                    }],
+                },
+    
+                form: {
+                    name : null,
+                    email: null,
+                },
             }
-            ).catch(()=>{
-            alert("图书信息非法")
-            })
+        },
+        mounted() {
+                    axios({
+                        method:'post',
+                        url: 'api/chara/list',
+                            headers:{
+                            'token':sessionStorage.getItem("token")
+                            }
+                        }).then(
+                        (resp)=>{
+                            if(resp.data.code != 200){
+                            alert(resp.data.msg)
+                            } else {
+                                console.log("读者增添页面挂载成功,身份列表查询成功！")
+                                console.log(resp.data)
+                                this.menuItems = resp.data.data
+                            }
+                        }
+                            ).catch(()=>{
+                        alert("服务器内部错误，请联系网络管理员！")
+                        })
+                },
+        methods: {
+            handleCommand(value){
+                console.log("test")
+                console.log(value)
+                this.currentChar = value
+            },
+            addReader() {
+                if(this.currentChar === ''){
+                    alert("未分配角色！")
+                    return;
+                }
+                axios({
+                        method:'post',
+                        url: 'api/reader/update',
+                        data:{
+                            typeId:this.menuItems.find(item => item.name === this.currentChar).id,
+                            name:this.form.name,
+                            email:this.form.email
+                        },
+                        headers:{
+                        'token':sessionStorage.getItem("token")
+                        }
+                    }).then(
+                    (resp)=>{
+                        if(resp.data.code != 200){
+                        alert(resp.data.msg)
+                        } else {
+                        alert("成功增添读者")
+                        }
+                    }
+                    ).catch(()=>{
+                    alert("网络错误，请联系网络管理员！")
+                    })
+            }
+        }
     }
-}
-}
-</script>
-
-<style>
-
-</style>
+        </script>
+        
+        <style>
+        .el-dropdown-link {
+            cursor: pointer;
+            color: #409EFF;
+        }
+        .el-icon-arrow-down {
+            font-size: 12px;
+        }
+        </style>
