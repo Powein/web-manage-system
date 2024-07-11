@@ -135,7 +135,7 @@ export default {
                     console.log("管理员列表查询成功！")
                     // this.menuItems = resp.data.data
                     for(var j = 0; j < resp.data.data.length; j++) {
-                        resp.data.data[j].groupName = '待查询'
+                        resp.data.data[j].groupName = '不存在'
                     }
                     this.adminItems = resp.data.data
                     console.log(this.adminItems)
@@ -199,8 +199,8 @@ export default {
                 password:null,
             },
             updateForm:{
-                updateName:null,
-                updatePassword:null
+                updateName:'',
+                updatePassword:''
             }
         }
     },

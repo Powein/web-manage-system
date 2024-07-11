@@ -3,12 +3,12 @@
         <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif; margin: 5%">权限组策略</header>
     <div style="text-align: center;">
         <header style="font-size: medium; text-align: center; font-family: Arial, Helvetica, sans-serif;">单击任意项以删改</header>
-        <el-button @click="newAdminVisible = true" style="margin: 1%; font-size: large;" type="primary">添加权限组</el-button>
+        <el-button @click="addGroupVisible = true" style="margin: 1%; font-size: large;" type="primary">添加权限组</el-button>
 
     </div>
     <div style="display: flex">
     <el-table
-    :data="adminItems"
+    :data="menuItems"
     @row-click="prepareUpdate"
     stripe
     style="width: 100%">
@@ -25,23 +25,28 @@
     <el-table-column
         prop="borrowBack"
         label="借还权限" >
+        <template v-slot:default="{ row }">{{ row.borrowBack === true ? '有权限' : '无权限' }}</template>
     </el-table-column>
 
     <el-table-column
         prop="sysQuery"
         label="系统查询权限" >
+        <template v-slot:default="{ row }">{{ row.sysQuery === true ? '有权限' : '无权限' }}</template>
     </el-table-column>
     <el-table-column
         prop="sysSet"
         label="超级管理员权限" >
+        <template v-slot:default="{ row }">{{ row.sysSet === true ? '有权限' : '无权限' }}</template>
     </el-table-column>
     <el-table-column
         prop="readerSet"
         label="读者设置权限" >
+        <template v-slot:default="{ row }">{{ row.readerSet === true ? '有权限' : '无权限' }}</template>
     </el-table-column>
     <el-table-column
         prop="bookSet"
         label="图书设置权限" >
+        <template v-slot:default="{ row }">{{ row.bookSet === true ? '有权限' : '无权限' }}</template>
     </el-table-column>
     </el-table>
     </div>
@@ -49,7 +54,7 @@
 <div style="display: flex; justify-content: flex-end;">
     <el-dialog
     title="添加权限组"
-    :visible.sync="newAdminVisible"
+    :visible.sync="addGroupVisible"
     width="30%">
 
     <template>
@@ -65,32 +70,52 @@
     <template>
     <el-form ref="form" :model="form" :rules="rules" label-width="120px"
         style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
-        <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif; margin: 5%">读者注册</header>
-        <el-form-item label="读者姓名" prop="name">
+        <el-form-item label="权限组名" prop="name">
         <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="读者邮箱" prop="email">
-        <el-input v-model="form.email"></el-input>
         </el-form-item>
         </el-form>
     </template>
 
     <div style="text-align: center">
-    <el-button type="primary" @click="addAdmin" class="inDialogBtn">提 交</el-button>
-    <el-button  type = "danger" @click="newAdminVisible = false" class="inDialogBtn">关 闭</el-button>
+
+    <el-button type="primary" @click="addGroup" class="inDialogBtn">提 交</el-button>
+    <el-button  type = "danger" @click="addGroupVisible = false" class="inDialogBtn">关 闭</el-button>
     </div>   
 
     </el-dialog>
 
 <el-dialog
 title="修改权限组(留空项不更改)"
-:visible.sync="updateAdminVisible"
+:visible.sync="updateGroupVisible"
 width="30%">
 
+
+<template>
+    <el-checkbox-group v-model="checkList">
+        <el-checkbox label="借还权限"></el-checkbox>
+        <el-checkbox label="系统查询权限"></el-checkbox>
+        <el-checkbox label="超级管理员权限"></el-checkbox>
+        <el-checkbox label="读者设置权限" ></el-checkbox>
+        <el-checkbox label="图书设置权限" ></el-checkbox>
+    </el-checkbox-group>
+    </template>
+
+    <template>
+    <el-form ref="form" :model="form" :rules="rules" label-width="120px"
+        style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
+        <el-form-item label="权限组名" prop="name">
+        <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        </el-form>
+    </template>
+
     <div style="text-align: center">
-    <el-button type="primary" @click="updateAdmin" class="inDialogBtn">提 交</el-button>
-    <el-button  type = "danger" @click="updateAdminVisible = false" class="inDialogBtn">关 闭</el-button>
+
+    <el-button type="primary" @click="updateGroup" class="inDialogBtn">提 交</el-button>
+    <el-button  type = "danger" @click="updateGroupVisible = false" class="inDialogBtn">关 闭</el-button>
+    <el-button  type = "warning" @click="deleteGroup" class="inDialogBtn">删 除</el-button>
     </div>   
+
 </el-dialog>
 
 
@@ -105,38 +130,6 @@ width="30%">
 import axios from 'axios';
 export default {
     mounted(){
-        var adminQuerySuc = false
-        var purViewQuerySuc = false
-        var showedMess = false
-        axios({
-            method:'get',
-            url: 'api/admin/query',//this step is going to query all the items
-                headers:{
-                'token':sessionStorage.getItem("token")
-                }
-            }).then(
-            (resp)=>{
-                if(resp.data.code != 200){
-                alert(resp.data.msg)
-                } else {
-                    console.log("管理员列表查询成功！")
-                    // this.menuItems = resp.data.data
-                    for(var j = 0; j < resp.data.data.length; j++) {
-                        resp.data.data[j].groupName = '待查询'
-                    }
-                    this.adminItems = resp.data.data
-                    console.log(this.adminItems)
-                    adminQuerySuc = true
-                    if(adminQuerySuc && purViewQuerySuc && !showedMess){
-                        console.log("超级管理员页面挂载成功")
-                        showedMess = true
-                        this.addNameForAdmin()
-                    }
-                }
-            }).catch(()=>{
-            alert("服务器内部错误，请联系网络管理员！")
-        }),
-
         axios({
             method:'get',
             url: 'api/authority/queryall',
@@ -151,133 +144,158 @@ export default {
                     console.log("权限表查询成功！")
                     console.log(resp.data)
                     this.menuItems = resp.data.data
-                    purViewQuerySuc = true
-                    if(adminQuerySuc && purViewQuerySuc && !showedMess){
-                        console.log("超级管理员页面挂载成功")
-                        showedMess = true
-                        this.addNameForAdmin()
-                    }
+                    console.log("管理员权限组挂载成功")
                 }
             }
                 ).catch(()=>{
             alert("服务器内部错误，请联系网络管理员！")
-        })
+            })
     },
     data() {
         return{
-            updateAdminVisible: false,
-            checked:false,
-            rules:{
-            name:[{
-                required:true, message:"请输入姓名", trigger: 'blur',
-            }],
-            password:[{
-                    required:true, message:"请输入密码", trigger: 'blur',
-                },],
+            updateGroupVisible:false,
+            checkedItems:{
+                borrowBack: false,
+                sysQuery: false,
+                sysSet: false,
+                readerSet: false,
+                bookSet :false,
+                name: null,
+                id: null,
             },
 
-
+            rules:{
+            name:[{
+                required:true, message:"必须输入权限组名", trigger: 'blur',
+            }]
+            },
+            form:{
+                //填写权限组名字
+                name:null,
+            },
             adminItems: [],
             currentChar:'未选中权限组',
             menuItems:[],
-            newAdminVisible: false,
+            addGroupVisible: false,
 
-            checkList: ['选中且禁用','复选框 A']
+            checkList: []
         }
     },
     methods:{
-        updateAdmin() {
-            console.log({
-                id: this.adminToUpdate.id,
-                    name: (this.updateForm.updateName=='') ? this.adminToUpdate.name : this.updateForm.updateName,
-                    password: (this.updateForm.updatePassword=='') ? this.adminToUpdate.password : this.updateForm.updatePassword,
-                    group: (this.checked) ? (this.menuItems.find(item => item.name === this.currentChar).id) : null,
-            })
+        getCheckedItems() {
+            console.log(this.checkList)
+            this.checkedItems = {
+                borrowBack: false,
+                sysQuery: false,
+                sysSet: false,
+                readerSet: false,
+                bookSet :false,
+            }
+            for(var i = 0; i < this.checkList.length; i++) {
+                if (this.checkList[i] === '借还权限')
+                    this.checkedItems.borrowBack = true
+                if (this.checkList[i] === '超级管理员权限')
+                    this.checkedItems.sysSet = true
+                if (this.checkList[i] === '系统查询权限')
+                    this.checkedItems.sysQuery = true
+                if (this.checkList[i] === '图书设置权限')
+                    this.checkedItems.bookSet = true
+                if (this.checkList[i] === '读者设置权限')
+                    this.checkedItems.readerSet = true
+            }
+            
+            console.log(this.checkedItems)
+            console.log(this.form)
+        },
+
+        addGroup() {
+            this.getCheckedItems()
             axios({
+                url:"api/authority/add",
                 method:'post',
-                url: 'api/admin/update',
                 data:{
-                    id: this.adminToUpdate.id,
-                    name: (this.updateForm.updateName=='') ? this.adminToUpdate.name : this.updateForm.updateName,
-                    password: (this.updateForm.updatePassword=='') ? this.adminToUpdate.password : this.updateForm.updatePassword,
-                    group: (this.checked) ? (this.menuItems.find(item => item.name === this.currentChar).id) : null,
+                    name: this.form.name,
+                    id: null,
+                    borrowBack: this.checkedItems.borrowBack,
+                    sysQuery: this.checkedItems.sysQuery,
+                    sysSet: this.checkedItems.sysSet,
+                    readerSet: this.checkedItems.readerSet,
+                    bookSet: this.checkedItems.bookSet
+                },
+                headers:{
+                    'token':sessionStorage.getItem("token")
+                },
+            })
+            this.form.name = null
+            location.reload()
+        },
+        //更新组
+        deleteGroup(){
+            this.getCheckedItems()
+            if(this.groupToUpdate.id == 1) {
+                alert("无法删除初始超级管理员组")
+                return
+            }
+            axios({
+                url:"api/authority/delete/" + this.groupToUpdate.id,
+                method:"get",
+                data:{},
+                headers:{
+                'token':sessionStorage.getItem("token")
+                }
+            }).then((resp) => {
+                if(resp.data.code==200){
+                    alert("成功地删除了组")
+                } else {
+                    alert(resp.data.msg)
+                }
+            }).catch(() =>{
+                alert("服务器出错, 请联系网络管理员")
+            })
+            location.reload()
+
+        },
+        updateGroup(){
+            this.getCheckedItems()
+            this.groupToUpdate.id
+            if(this.groupToUpdate.id == 1){
+                alert("无法对初始超级管理员进行更改")
+                return
+            }
+            axios({
+                url:"api/authority/update",
+                method:"post",
+                data:{
+                    name: this.form.name,
+                    id: this.groupToUpdate.id,
+                    borrowBack: this.checkedItems.borrowBack,
+                    sysQuery: this.checkedItems.sysQuery,
+                    sysSet: this.checkedItems.sysSet,
+                    readerSet: this.checkedItems.readerSet,
+                    bookSet: this.checkedItems.bookSet,
                 },
                 headers:{
                 'token':sessionStorage.getItem("token")
                 }
-            })
-            this.updateForm = {
-                updateName:null,
-                updatePassword:null,
-            }
-            location.reload()
-        },
-        addNameForAdmin() {
-            for(var i = 0; i < this.adminItems.length; i++) {
-                var groupId = this.adminItems[i].group
-                var groupName = this.menuItems.find((item)=> item.id === groupId).name
-                this.adminItems[i].groupName = groupName
-            }
-        },
-        prepareUpdate(row){
-            this.adminToUpdate = row
-            this.updateAdminVisible = true
-            console.log("当前要修改的行")
-            console.log(this.adminToUpdate)
-        },
-        handleCommand(value){
-            console.log("test")
-            console.log(value)
-            this.currentChar = value
-        },
-        addAdmin(){
-            this.$refs["form"].validate((valid) => {
-            if (valid) {
-                alert('成功添加！');
-                
-                    if(this.currentChar === '未选中权限组'){
-                alert("未选择权限组！")
-                return;
-            }
-            console.log({
-                        name:this.form.name,
-                        password:this.form.password,
-                        userGroup:this.menuItems.find(item => item.name === this.currentChar).id
-                    },)
-            axios({
-                    method:'post',
-                    url: 'api/admin/add',
-                    data:{
-                        name:this.form.name,
-                        password:this.form.password,
-                        group:this.menuItems.find(item => item.name === this.currentChar).id
-                    },
-                    headers:{
-                    'token':sessionStorage.getItem("token")
-                    }
-                }).then(
-                (resp)=>{
-                    if(resp.data.code != 200){
+            }).then((resp) => {
+                if(resp.data.cod==200){
+                    alert("成功地更新了组")
+                } else {
                     alert(resp.data.msg)
-                    } else {
-                    alert("成功增添管理员")
-                    }
                 }
-                ).catch(()=>{
-                alert("网络错误，请联系网络管理员！")
+            }).catch(() =>{
+                alert("服务器出错, 请联系网络管理员")
             })
-            this.form = {
-                name:null,
-                password:null,
-                }
-                location.reload()
-            } else {
-                console.log('error submit!!');
-                return false;
-            }
-            });
+            location.reload()
+            this.form.name = null
         },
- 
+        
+        prepareUpdate(row){
+            this.updateGroupVisible = true
+            this.groupToUpdate = row
+            console.log("当前要修改的行")
+            console.log(this.groupToUpdate)
+        },
     }
 }
 </script>
