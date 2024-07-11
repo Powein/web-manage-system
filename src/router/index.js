@@ -6,8 +6,8 @@ import adminPass from '../views/adminPass.vue'
 import bookInsert from '../views/bookInsert.vue'
 import bookModify from '../views/bookModify.vue'
 import bookQuery from '../views/bookQuery.vue'
-import borrowBook from '../views/borrowBook.vue'
-import borrowReturn from '../views/borrowReturn.vue'
+// import borrowBook from '../views/borrowBook.vue'
+// import borrowReturn from '../views/borrowReturn.vue'
 import borrowQuery from '../views/borrowQuery.vue'
 import readerGroups from '../views/readerGroups.vue'
 import readerModify from '../views/readerModify.vue'
@@ -48,16 +48,16 @@ const routes = [
     name: 'bookQuery',
     component: bookQuery
   },
-  {
-    path: '/borrow/book',
-    name: 'borrowBook',
-    component: borrowBook
-  },
-  {
-    path: '/borrow/return',
-    name: 'borrowReturn',
-    component: borrowReturn
-  },
+  // {
+  //   path: '/borrow/book',
+  //   name: 'borrowBook',
+  //   component: borrowBook
+  // },
+  // {
+  //   path: '/borrow/return',
+  //   name: 'borrowReturn',
+  //   component: borrowReturn
+  // },
   {
     path: '/borrow/query',
     name: 'borrowQuery',

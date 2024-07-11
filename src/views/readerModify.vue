@@ -16,24 +16,23 @@
             <el-input v-model="form.name"></el-input>
             </el-form-item>
             </el-form>
-            <div style="align-items: center; margin-left: 30%">
-                <el-checkbox v-model="checked" >修改角色身份  </el-checkbox>
+            <div style="margin-left: 30%; display: flex; align-items: center;">
+            <div style="align-items: center; margin-left: 10%">
+                <el-checkbox v-model="checked" >修改角色身份， </el-checkbox>
                 <el-dropdown @command="handleCommand">
                     <span class="el-dropdown-link">
-                        选择身份<i class="el-icon-arrow-down el-icon--right"></i>
+                        新的身份 : {{ currentChar }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <!-- <el-dropdown-item v-for="item in menuItems": key = "item">{{item.name}}</el-dropdown-item> -->
                         <el-dropdown-item v-for="(item, index) in menuItems" :key="index" :command = item.name >{{ item.name }}</el-dropdown-item>
-                        
                     </el-dropdown-menu>
-                    
                 </el-dropdown>
-                <div >选中的角色：{{ currentChar }}</div>
+            </div>
             </div>
     
     
-            <el-button type="primary" @click="addReader" style="width: 35vw; margin-left: 33%;">注册读者</el-button>
+            <el-button type="primary" @click="addReader" style="width: 35vw; margin-left: 33%; margin-top: 5%">提交修改</el-button>
     
     </div>
     

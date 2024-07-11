@@ -7,7 +7,7 @@
     <el-menu >
       <el-submenu index="1">
 
-        <template slot="title"><i class="el-icon-message"></i>图书业务管理</template>
+        <template slot="title"><i class="el-icon-message"></i>图书业务</template>
 
 
         <el-menu-item-group>
@@ -18,15 +18,15 @@
         </el-menu-item-group>
 
         <el-menu-item-group title="借阅管理">
-          <el-menu-item index="1-4"><router-link to="/borrow/book" class="jumplink">图书借阅</router-link></el-menu-item>
-        <el-menu-item index="1-5"><router-link to="/borrow/return" class="jumplink">图书归还</router-link></el-menu-item>
-        <el-menu-item index="1-6"><router-link to="/borrow/query" class="jumplink">借阅查询</router-link></el-menu-item>
+          <!-- <el-menu-item index="1-4"><router-link to="/borrow/book" class="jumplink">图书借阅</router-link></el-menu-item>
+        <el-menu-item index="1-5"><router-link to="/borrow/return" class="jumplink">图书归还</router-link></el-menu-item> -->
+        <el-menu-item index="1-6"><router-link to="/borrow/query" class="jumplink">借阅和归还</router-link></el-menu-item>
       </el-menu-item-group>
       </el-submenu>
 
       
       <el-submenu index="2">
-        <template slot="title"><i class="el-icon-menu"></i>权限管理模块</template>
+        <template slot="title"><i class="el-icon-menu"></i>用户和权限管理</template>
 
         <el-menu-item-group title="管理员管理">
           <template slot="title">管理员模块</template>
@@ -42,9 +42,8 @@
           <el-menu-item index="2-6"><router-link to="/reader/groups" class="jumplink">读者组管理</router-link></el-menu-item>
         </el-menu-item-group>
 
-
       </el-submenu>
-      <el-menu-item index="2-7"><router-link to="/login" class="jumplink">我的账户</router-link></el-menu-item>
+      <el-menu-item index="2-7" v-if="notLogin"><router-link to="/login" class="jumplink">登录&登出</router-link></el-menu-item>
     </el-menu>
   </el-aside>
   
@@ -94,12 +93,14 @@ export default {
   // components: { ManageView },
   // components: {ElementView, PageView, DialogView, DialogFormView },
   data() {
+      
       const item = {
         date: '2016-05-02',
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
       };
       return {
+        notLogin:true,
         tableData: Array(20).fill(item)
       }
     }

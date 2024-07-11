@@ -9,10 +9,10 @@
       <br/>
       
       <el-form-item label="读者ID">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.readerId"></el-input>
       </el-form-item>
       <el-form-item label="书籍ID">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.bookId"></el-input>
       </el-form-item>
 
 
@@ -28,25 +28,27 @@
         <br>
         <br>
       <el-form-item style="width: max-content;">
-        <el-button type="primary" @click="onSubmit" style="width: 35vw; margin-left: 5%;">查询</el-button>
+        <el-button type="primary" @click="queryBorrow" style="width: 35vw; margin-left: 5%;">查询</el-button>
       </el-form-item>
     </el-form>
 
-    <el-button type="text" @click="dialogTableVisible = true">打开嵌套表格的 Dialog</el-button>
-<el-dialog title="借阅记录" :visible.sync="dialogTableVisible" >
+
   <el-table :data="borrowData" @row-click="handleClick">
-    <el-table-column property="reader" label="读者" width="150"></el-table-column>
-    <el-table-column property="readerId" label="读者ID" width="150"></el-table-column>
-    <el-table-column property="book" label="借阅书籍" width="200"></el-table-column>
-    <el-table-column property="bookId" label="书籍ID"></el-table-column>
-    <el-table-column property="date" label="借出日期"></el-table-column>
-    <el-table-column property="isReturn" label="是否归还">
+    <el-table-column property="readerName" label="读者" width="150"></el-table-column>
+    <el-table-column property="borrow.readerId" label="读者ID" width="150"></el-table-column>
+    <el-table-column property="bookName" label="借阅书籍" width="200"></el-table-column>
+    <el-table-column property="borrow.bookId" label="书籍ID"></el-table-column>
+    <el-table-column property="borrow.borrowTime" label="借出日期"></el-table-column>
+    <el-table-column property="borrow.backTime" label="归还日期"></el-table-column>
+    <el-table-column property="borrow.ifBack" label="是否归还">
+    
         <template v-slot:default="{ row }">
-      {{ row.isReturn === true ? '已归还' : '未归还' }}
+      {{ row.borrow.ifBack === true ? '已归还' : '未归还' }}
     </template>
     </el-table-column>
+    <el-table-column property="borrow.operator" label="操作者"></el-table-column>
+    <el-table-column property="borrow.id" label="借阅ID"></el-table-column>
   </el-table>
-</el-dialog>
 
 </div>
     </template>
@@ -58,103 +60,81 @@ import axios from 'axios';
         data() {
           return {
             form: {
-              readerId:'',
-              bookId:'',
-              fromDate:'',
-              toDate:''
+              fromTime:null,
+              toTime:null,
+              readerId:null,
+              bookId:null,
             },
             value1: '',
 
 
-        borrowData: [{
-            date:'2022-2-22',
-            reader:'雾雨魔理沙1',
-            readerId:'123456',
-            book:"C primer plus",
-            bookId:"10000",
-            borrowId:1,
-            isReturn: true,
-        }, {
-            date:'2022-2-22',
-            reader:'雾雨魔理沙2',
-            readerId:'123456',
-            book:"C primer plus",
-            borrowId:2,
-            bookId:"10000",
-            isReturn: false,
-        },{
-            date:'2022-2-22',
-            reader:'雾雨魔理沙3',
-            readerId:'123456',
-            book:"C primer plus",
-            borrowId:3,
-            bookId:"10000",
-            isReturn: false,
-        }, {
-            date:'2022-2-22',
-            reader:'雾雨魔理沙4',
-            readerId:'123456',
-            book:"C primer plus",
-            borrowId:4,
-            bookId:"10000",
-            isReturn: false,
-        }],
-            dialogTableVisible: false,
+        borrowData: [],
           }
         },
         methods: {
-
-          onSubmit() {
-            console.log('submit!');
-            console.log({
-              fromtime:this.form.date1,
-              totime:this.form.date2
-            });
-            this.dialogTableVisible = true;
+          queryBorrow(){
+            axios({
+              method:'post',
+              url: 'api/borrow/query',
+              data: {
+                fromTime: this.value1[0],
+                toTime:this.value1[1],
+                readerId:this.form.readerId,
+                bookId:this.form.bookId,
+                borrowId:null,
+                ifBack:null,
+              },
+              headers:{
+              'token':sessionStorage.getItem("token")
+              }
+            }).then((resp)=>{
+              if(resp.data.code != 200){
+                alert("权限不足或输入不合法")
+                this.form = {
+                  fromTime:null,
+                  toTime:null,
+                  readerId:null,
+                  bookId:null,
+                }
+                return
+              }
+              this.borrowData = resp.data.data
+              for(let i = 0; i < this.borrowData.length; i++) {
+                if(this.borrowData[i].borrow.borrowTime != undefined){
+                  this.borrowData[i].borrow.borrowTime = this.borrowData[i].borrow.borrowTime.substr(0,10)
+                }
+                  
+                if(this.borrowData[i].borrow.backTime != undefined)
+                  this.borrowData[i].borrow.backTime = this.borrowData[i].borrow.backTime.slice(0,10)
+              }
+              console.log(this.borrowData)
+            }).catch((error)=>{
+              console.log(error)
+              alert("服务器不在线，请联系网络维护人员")
+            })
           },
-          
-          handleClose(done) {
-        this.$confirm('确认关闭？')
-        //eslint-disable-next-line
-          .then(_ => {
-            done();
-          })
-          //eslint-disable-next-line
-          .catch(_ => {});
-      },
-
 
       handleClick(row) {//点击即可归还图书
-        const index = this.borrowData.findIndex(item => item.borrowId === row.borrowId);
-        if (index !== -1) {
-        console.log(this.borrowData[index])
-        let result = confirm("确认还书？");
-        if (result) {
-        // 用户点击了确定按钮，执行相应的操作
+        if(row.borrow.ifBack) 
+          return
+        let result = confirm("确定归还？")
+        if(!result)
+          return
 
-        console.log("用户选择了确定");
-            this.borrowData[index].isReturn = true;
-
-            axios({
-            method: 'post',
-            url: 'api/borrow/return',
-            data:{
-              id:row.id,
-
-            },
-            headers:{
-              'token':sessionStorage.getItem("token")
-            }
-          })
-
-        } else {
-        // 用户点击了取消按钮
-          console.log("用户选择了取消");
-          
-        }
+        console.log("开始归还");
+          axios({
+          method: 'post',
+          url: 'api/borrow/returnBook',
+          data: row.borrow,
+          headers:{
+            'token':sessionStorage.getItem("token")
+          }
+        })
+        row.borrow.ifBack = true
+        row.borrow.backTime = new Date().toISOString().slice(0,10)
+        return
     }
-    }
-}
+  }
 }
     </script>
     

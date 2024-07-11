@@ -2,10 +2,7 @@
 <div style=" align-items: center; background-color: aquamarine; width:85vw;">
     <el-form ref="form" :model="form" :rules="rules" label-width="120px"
         style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
-        <br/>
-        <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif;">读者注册</header>
-        <br/>
-        <br/>
+        <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif; margin: 5%">读者注册</header>
         <el-form-item label="读者姓名" prop="name">
         <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -13,10 +10,10 @@
         <el-input v-model="form.email"></el-input>
         </el-form-item>
         </el-form>
-        <div>
+        <div style="margin-left: 23%; display: flex; align-items: center;">
             <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
-                    下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                    选择角色<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <!-- <el-dropdown-item v-for="item in menuItems": key = "item">{{item.name}}</el-dropdown-item> -->
@@ -24,11 +21,11 @@
                     
                 </el-dropdown-menu>
             </el-dropdown>
-            <div>选中的角色：{{ currentChar }}</div>
+            <div style="font-size: medium">当前角色：{{ currentChar }}</div>
         </div>
 
 
-        <el-button type="primary" @click="addReader" style="width: 35vw; margin-left: 33%;">注册读者</el-button>
+        <el-button type="primary" @click="addReader" style="width: 35vw; margin-left: 33%; margin-top: 5%">注册读者</el-button>
 
 </div>
 
@@ -40,7 +37,7 @@ import axios from 'axios';
 export default {
     data() {
         return {
-            currentChar:'',
+            currentChar:'未选择角色',
             menuItems: [
                 {id: 1, name:"嘉然"},
                 {id: 2,name:"皮套狗"},
