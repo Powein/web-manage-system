@@ -25,6 +25,16 @@
     <el-table-column
         prop="password"
         label="管理员密码" >
+        <template slot-scope="scope">
+        <el-tooltip
+            effect="light"
+            placement="top"
+            :content="scope.row.password"
+            style="font-size: medium">
+            <!-- 显示一个占位符或图标，取决于你的设计 -->
+            <span>******</span>
+        </el-tooltip>
+    </template>
     </el-table-column>
 
     <el-table-column
@@ -50,7 +60,8 @@
     <el-form-item label="管理员密码" prop="password">
     <el-input v-model="form.password" type="password"></el-input>
     </el-form-item>
-    </el-form>
+    
+</el-form>
 <div style="margin-left: 23%; display: flex; align-items: center;">
         <el-dropdown @command="handleCommand">
             <span class="el-dropdown-link">
@@ -86,6 +97,7 @@ width="30%"
     <el-form-item label="管理员密码" prop="password">
     <el-input v-model="updateForm.updatePassword" type="password"></el-input>
     </el-form-item>
+
     </el-form>
 <div style="margin-left: 23%; display: flex; align-items: center;">
         <el-dropdown @command="handleCommand">
@@ -103,7 +115,9 @@ width="30%"
     <br>
     <div style="text-align: center">
     <el-button type="primary" @click="updateAdmin" class="inDialogBtn">提 交</el-button>
+    <el-button  type = "warning" @click="deleteAdmin" class="inDialogBtn">删 除</el-button>
     <el-button  type = "danger" @click="updateAdminVisible = false" class="inDialogBtn">关 闭</el-button>
+
     </div>   
     </el-dialog>
 
@@ -187,6 +201,10 @@ export default {
             password:[{
                     required:true, message:"请输入密码", trigger: 'blur',
                 },],
+            checkPassword: [
+            { required: true, message: '请再次输入密码', trigger: 'blur' },
+            { validator: this.validatePassword, trigger: 'blur' }
+            ]
             },
 
 
@@ -201,17 +219,36 @@ export default {
             updateForm:{
                 updateName:'',
                 updatePassword:''
-            }
+            },
         }
     },
     methods:{
+        deleteAdmin() {
+            axios({
+                url:"api/admin/delete/" + this.adminToUpdate.id,
+                method:"delete",
+                data:{},
+                headers:{
+                'token':sessionStorage.getItem("token")
+                }
+            }).then((resp) => {
+                if(resp.data.code==200){
+                    alert("成功地删除了管理员")
+                } else {
+                    alert(resp.data.msg)
+                }
+            }).catch(() =>{
+                alert("服务器出错, 请联系网络管理员")
+            })
+            location.reload()
+        },
         updateAdmin() {
             console.log({
-                id: this.adminToUpdate.id,
+                    id: this.adminToUpdate.id,
                     name: (this.updateForm.updateName=='') ? this.adminToUpdate.name : this.updateForm.updateName,
                     password: (this.updateForm.updatePassword=='') ? this.adminToUpdate.password : this.updateForm.updatePassword,
                     group: (this.checked) ? (this.menuItems.find(item => item.name === this.currentChar).id) : null,
-            })
+                })
             axios({
                 method:'post',
                 url: 'api/admin/update',
@@ -219,16 +256,12 @@ export default {
                     id: this.adminToUpdate.id,
                     name: (this.updateForm.updateName=='') ? this.adminToUpdate.name : this.updateForm.updateName,
                     password: (this.updateForm.updatePassword=='') ? this.adminToUpdate.password : this.updateForm.updatePassword,
-                    group: (this.checked) ? (this.menuItems.find(item => item.name === this.currentChar).id) : null,
+                    group: (this.checked) ? (this.menuItems.find(item => item.name === this.currentChar).id) : this.adminToUpdate.group,
                 },
                 headers:{
                 'token':sessionStorage.getItem("token")
                 }
             })
-            this.updateForm = {
-                updateName:null,
-                updatePassword:null,
-            }
             location.reload()
         },
         addNameForAdmin() {
@@ -252,8 +285,6 @@ export default {
         addAdmin(){
             this.$refs["form"].validate((valid) => {
             if (valid) {
-                alert('成功添加！');
-                
                     if(this.currentChar === '未选中权限组'){
                 alert("未选择权限组！")
                 return;
@@ -289,6 +320,7 @@ export default {
                 name:null,
                 password:null,
                 }
+                alert('成功添加！');
                 location.reload()
             } else {
                 console.log('error submit!!');

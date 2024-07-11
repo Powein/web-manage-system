@@ -94,7 +94,11 @@
                 this.currentChar = value
             },
             addReader() {
-                if(this.currentChar === '未选择角色' && this.checked){
+                this.$refs["form"].validate((valid) => {
+                    if(!valid){
+                        return
+                    }
+                    if(this.currentChar === '未选择角色' && this.checked){
                     alert("未选择角色！")
                     return;
                 }
@@ -166,6 +170,7 @@
                         alert("网络错误，请联系网络管理员！")
                     })
                 }
+                })
             }   
         }
     }

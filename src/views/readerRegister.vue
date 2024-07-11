@@ -95,7 +95,12 @@ export default {
             this.currentChar = value
         },
         addReader() {
-            if(this.currentChar === '未选择角色'){
+            this.$refs["form"].validate((valid) => {
+                if(!valid){
+                    console.log("未提交表单")
+                    return;
+                }
+                if(this.currentChar === '未选择角色'){
                 alert("未分配角色！")
                 return;
             }
@@ -121,6 +126,7 @@ export default {
                 ).catch(()=>{
                 alert("网络错误，请联系网络管理员！")
                 })
+            })
         }
     }
 }

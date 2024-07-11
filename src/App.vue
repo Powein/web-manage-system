@@ -20,7 +20,7 @@
         <el-menu-item-group title="借阅管理">
           <!-- <el-menu-item index="1-4"><router-link to="/borrow/book" class="jumplink">图书借阅</router-link></el-menu-item>
         <el-menu-item index="1-5"><router-link to="/borrow/return" class="jumplink">图书归还</router-link></el-menu-item> -->
-        <el-menu-item index="1-6"><router-link to="/borrow/query" class="jumplink">借阅和归还</router-link></el-menu-item>
+        <el-menu-item index="1-6"><router-link to="/borrow/query" class="jumplink">借阅查询和归还</router-link></el-menu-item>
       </el-menu-item-group>
       </el-submenu>
 
@@ -72,12 +72,29 @@
     </el-main> -->
     <div>
       <router-view></router-view>
-      変わらないはずはないよ、手を伸ばして
+
       
     </div>
   <!-- </el-container> -->
 </el-container>
+<footer style="
+  background-color: #f5f5f5;
+  color: #666;
+  padding: 15px 0;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  border-top: 1px solid #ddd;
+">
+  <div style="margin-bottom: 5px;">
+    <a href="#" style="color: inherit; text-decoration: none;">作者：Powei @ ChongQingUniversity</a>
   </div>
+  <div>
+    <a href="#" style="color: inherit; text-decoration: none;" herf="https://github.com/Powein/web-manage-system">项目开源, MIT License</a>
+  </div>
+</footer>
+  </div>
+
 </template>
 <script>
 // import ManageView from './views/elements/ManageView.vue'
@@ -115,6 +132,17 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+.jumplink {
+  display: block;
+  padding: 10px 20px;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.jumplink:hover {
+  color: #0056b3; /* Darker blue text on hover */
 }
 .el-header {
     background-color: #B3C0D1;

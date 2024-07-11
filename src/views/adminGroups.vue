@@ -11,7 +11,7 @@
     :data="menuItems"
     @row-click="prepareUpdate"
     stripe
-    style="width: 100%">
+    style="width: 100%; width: auto;">
     <el-table-column
         prop="name"
         label="组名">
@@ -57,15 +57,18 @@
     :visible.sync="addGroupVisible"
     width="30%">
 
-    <template>
-    <el-checkbox-group v-model="checkList">
+
+<template>
+    <div style="display: flex;">
+        <el-checkbox-group v-model="checkList" style="display: flex;">
         <el-checkbox label="借还权限"></el-checkbox>
         <el-checkbox label="系统查询权限"></el-checkbox>
         <el-checkbox label="超级管理员权限"></el-checkbox>
-        <el-checkbox label="读者设置权限" ></el-checkbox>
-        <el-checkbox label="图书设置权限" ></el-checkbox>
-    </el-checkbox-group>
-    </template>
+        <el-checkbox label="读者设置权限"></el-checkbox>
+        <el-checkbox label="图书设置权限"></el-checkbox>
+        </el-checkbox-group>
+    </div>
+</template>
 
     <template>
     <el-form ref="form" :model="form" :rules="rules" label-width="120px"
@@ -87,27 +90,29 @@
 <el-dialog
 title="修改权限组(留空项不更改)"
 :visible.sync="updateGroupVisible"
-width="30%">
+style="width: auto; text-align: center; justify-items: center;">
 
-
-<template>
-    <el-checkbox-group v-model="checkList">
+    <div style="text-align: center; margin-left: 15%; margin-right: 15%">
+    <el-checkbox-group v-model="checkList" style="display: flex; text-align: center">
         <el-checkbox label="借还权限"></el-checkbox>
         <el-checkbox label="系统查询权限"></el-checkbox>
         <el-checkbox label="超级管理员权限"></el-checkbox>
         <el-checkbox label="读者设置权限" ></el-checkbox>
         <el-checkbox label="图书设置权限" ></el-checkbox>
     </el-checkbox-group>
-    </template>
+    </div>
 
-    <template>
-    <el-form ref="form" :model="form" :rules="rules" label-width="120px"
-        style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
-        <el-form-item label="权限组名" prop="name">
-        <el-input v-model="form.name"></el-input>
+    <template style="text-align: center;">
+        <el-form ref="form" :model="form" :rules="rules" label-width="120px"
+        style="display: flexbox; ">
+        <el-form-item label="权限组名" prop="name" style="margin: 5%;">
+        <el-input v-model="form.name" style="width: auto"></el-input>
         </el-form-item>
         </el-form>
     </template>
+
+
+
 
     <div style="text-align: center">
 

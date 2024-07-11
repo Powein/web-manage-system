@@ -60,9 +60,9 @@
                 },
                 menuItems: [],
                 form: {
-                    name : null,
-                    email : null,
-                    id : null,
+                    name : '',
+                    email : '',
+                    id : '',
                 },
             }
         },
@@ -88,9 +88,9 @@
                         method:'post',
                         url: 'api/reader/query',
                         data:{
-                            readerId:this.form.id,
-                            name:this.form.name,
-                            email:this.form.email
+                            readerId:this.form.id !== '' ? this.form.id : null,
+                            name:this.form.name !== '' ? this.form.name : null,
+                            email:this.form.email !== '' ? this.form.email : null
                         },
                         headers:{
                         'token':sessionStorage.getItem("token")

@@ -70,7 +70,11 @@ export default {
   },
   methods:{
     updateBook(){
-      axios({
+      this.$refs["form"].validate((valid) => {
+        if(!valid){
+          return
+        }
+        axios({
             method: 'post',
             url: 'api/book/update',
             data:{
@@ -103,6 +107,8 @@ export default {
         press:null,
         bookId:null
       }
+      })
+      
     }
   }
 }
