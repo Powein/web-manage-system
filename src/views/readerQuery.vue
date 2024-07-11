@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div style=" align-items: center; background-color: aquamarine; width:85vw;">
+        <div style=" align-items: center; width:85vw;">
             <el-form ref="form" :model="form" label-width="120px"
                 style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
                 <br/>

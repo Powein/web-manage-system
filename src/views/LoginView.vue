@@ -12,7 +12,7 @@
     <el-button type="warning" @click="logout" style="
     width: 25vw; margin-left: 35%"> 登出</el-button>
   </div>
-  <div v-else style="width: 85vw; background-color: aquamarine;">
+  <div v-else style="width: 85vw;">
     <header style="font-size: 40px; text-align: center">登陆</header>
     <br>
     <br>

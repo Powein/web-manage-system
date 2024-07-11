@@ -1,5 +1,5 @@
 <template>
-<div style=" align-items: center; background-color: aquamarine; width:85vw;">
+<div style=" align-items: center;  width:85vw;">
     <el-form ref="form" :model="form" :rules="rules" label-width="120px"
         style="display: flexbox; align-items: center; margin-left: 20%; margin-right: 20%;">
         <header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif; margin: 5%">读者注册</header>

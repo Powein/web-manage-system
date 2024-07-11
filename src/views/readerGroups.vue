@@ -2,7 +2,7 @@
     <div><header style="font-size: 40px; text-align: center; font-family: Arial, Helvetica, sans-serif; margin: 1%">读者组管理</header>
         
         <header style="font-size: medium; text-align: center; font-family: Arial, Helvetica, sans-serif;">单击以删改</header>
-<div style=" align-items: center; background-color: aquamarine; width:85vw; display: flex; justify-content: center; align-items: right; ">
+<div style=" align-items: center; width:85vw; display: flex; justify-content: center; align-items: right; ">
 
 
 
