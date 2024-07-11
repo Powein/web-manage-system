@@ -95,7 +95,7 @@ export default {
             this.currentChar = value
         },
         addReader() {
-            if(this.currentChar === ''){
+            if(this.currentChar === '未选择角色'){
                 alert("未分配角色！")
                 return;
             }

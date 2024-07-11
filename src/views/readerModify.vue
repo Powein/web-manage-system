@@ -94,8 +94,8 @@
                 this.currentChar = value
             },
             addReader() {
-                if(this.currentChar === ''){
-                    alert("未分配角色！")
+                if(this.currentChar === '未选择角色' && this.checked){
+                    alert("未选择角色！")
                     return;
                 }
                 if(this.checked){
