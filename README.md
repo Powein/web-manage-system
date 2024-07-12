@@ -1,24 +1,5 @@
-# vue-project-learn
+# Library manage system
+## biref
+This vue project co-op with the backend springboot library manage system. It enable user to do simple actions towards well-defined library system with admin group strategy.
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+p.s. Element UI component lib is required.
