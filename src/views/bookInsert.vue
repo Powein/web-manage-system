@@ -38,7 +38,7 @@ export default {
         return {
           rules:{
             barCode:[{//此处需要输入一个条形码
-              required:true, message:"请输入条形码", trigger: 'blur'
+              required:true, message:"请输入图书条形码", trigger: 'blur'
             }],
           },
 
@@ -55,6 +55,10 @@ export default {
     },
     methods: {
         addBook() {
+          this.$refs["form"].validate((valid) => {
+            if(!valid){
+              return
+            }
           axios({
                   method:'post',
                   url: 'api/book/add',
@@ -91,6 +95,8 @@ export default {
               ISBN:null,
               press:null
           }
+           
+          })
         }
     }
 }

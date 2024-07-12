@@ -1,7 +1,7 @@
 <template>
   <div>
     <header style="background-color: #B3C0D1; color: #333; border-radius: 5px; text-align: center;;"><img src="./assets/lms.png" height="90px" ></header>
-    <el-container style="height: auto; border: 1px solid #eee">
+    <el-container style="height: 830px; border: 1px solid #eee">
   <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
     <!-- <el-menu :default-openeds="['1', '2']"> -->
     <el-menu >
@@ -87,10 +87,10 @@
   border-top: 1px solid #ddd;
 ">
   <div style="margin-bottom: 10px;">
-    <a href="#" style="color: inherit; text-decoration: none;">作者：Powei @ ChongQingUniversity</a>
+    <a href="#" style="color: inherit; text-decoration: none;">作者: Powein@github.com</a>
   </div>
   <div>
-    <a href="https://github.com/Powein/web-manage-system" style="color: blue;"> 项目开源, MIT License</a>
+    <a href="https://github.com/Powein/web-manage-system" style="color: blue;">Open Source, </a><a style="color: inherit; text-decoration: none;">MIT License Copyright (c) 2024 Powei, ChongQing University</a>
   </div>
 </footer>
   </div>

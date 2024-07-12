@@ -137,6 +137,7 @@ export default {
                     alert(resp.data.msg)
                   } else {
                     alert("操作成功")
+                    location.reload()
                   }
                 }).catch((resp)=>{
                   console.log(resp.data)
